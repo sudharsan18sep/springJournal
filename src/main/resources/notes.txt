@@ -1,0 +1,28 @@
+HTTP:
+a 3 digit number returned as response from server
+used to convey information
+grouped into 5 types
+- 1xx - information: used for information and rarely used just to acknowledge that request is recieved and in processing
+- 2xx - successfull -  request processed succesfully
+200 ok - success
+201 created - new resource created
+204 no content - no response body like deletion
+
+-3xx -> redirection - further action required to complete the request
+301 moved permanently - moved to different URL
+302 Found - > URL moved and adds a new Url in header
+304 not modified -> the client can use cached copy
+
+4XX - error, authentication
+400 bad request - cannot process request client side issue
+401 - unauthorized - needs credentials to access
+403 - > no permission to access but client is authenticated
+
+5XX - server error
+500- internal server error
+502 - bad gateway
+503 - service unavaikabke server maintence
+
+How to send Status Code ??
+using Response Entity - > a class part of spring framwork used to customize the HTTP response
+

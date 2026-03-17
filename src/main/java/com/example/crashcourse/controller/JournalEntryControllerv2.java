@@ -5,12 +5,11 @@ import com.example.crashcourse.entity.JournalEntry;
 import com.example.crashcourse.service.JournalEntryService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //specail componetns handles http request
 @RestController
@@ -24,17 +23,27 @@ public class JournalEntryControllerv2 {
     private JournalEntryService journalEntryService;
 
     @GetMapping
-    public List<JournalEntry> getAll() {
-        return journalEntryService.getAllEntry();
+    public ResponseEntity<?> getAll() {
+        List<JournalEntry> all= journalEntryService.getAllEntry();
+        if(all !=null && !all.isEmpty()){
+            return  new ResponseEntity<>(all, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
 
     @PostMapping
     //@requestbody - hey spring get the data from request and convert it into java object
-    public JournalEntry createEntry(@RequestBody JournalEntry myEntry) {
-        journalEntryService.saveEntry(myEntry);
-        return myEntry;
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
 
+        try {
+            journalEntryService.saveEntry(myEntry);
+            return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
     }
 
@@ -42,27 +51,33 @@ public class JournalEntryControllerv2 {
     //requestVariable
 
     @GetMapping("id/{id}")
-    public JournalEntry getJournalEntryById(@PathVariable ObjectId id) {
-        return journalEntries.get(id);
+    public ResponseEntity<JournalEntry> getJournalEntryById(@PathVariable ObjectId id) {
+        Optional<JournalEntry> journalEntryOptional = journalEntryService.getJournalbyId(id);
+        if(journalEntryOptional.isPresent()){
+            return new ResponseEntity<>(journalEntryOptional.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
-
+    //? -> wildcard pattern in future we can return any class object
     @DeleteMapping("id/{id}")
-    public JournalEntry deleteJournalEntryById(@PathVariable ObjectId id) {
-        return journalEntries.remove(id);
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
+        journalEntries.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("id/{id}")
-    public JournalEntry updateJournalById(@PathVariable ObjectId Id, @RequestBody JournalEntry newEntry) {
+    public ResponseEntity<JournalEntry> updateJournalById(@PathVariable ObjectId Id, @RequestBody JournalEntry newEntry) {
 
         JournalEntry oldEntry = journalEntryService.getJournalbyId(Id).orElse(null);
         if(oldEntry != null)
         {
             oldEntry.setTitle((newEntry.getTitle()!=null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : oldEntry.getTitle()));
             oldEntry.setContent((newEntry.getContent()!=null && !newEntry.getContent().equals(""))? newEntry.getContent() : oldEntry.getContent());
+            journalEntryService.saveEntry(oldEntry);
+            return new ResponseEntity<>(oldEntry, HttpStatus.OK);
         }
-        journalEntryService.saveEntry(oldEntry);
-        return oldEntry;
+       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
