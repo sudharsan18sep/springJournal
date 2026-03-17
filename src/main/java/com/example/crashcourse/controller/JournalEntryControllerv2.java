@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 //specail componetns handles http request
@@ -38,6 +39,7 @@ public class JournalEntryControllerv2 {
     public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
 
         try {
+            myEntry.setDate(LocalDateTime.now());
             journalEntryService.saveEntry(myEntry);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }

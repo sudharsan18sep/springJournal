@@ -26,3 +26,6 @@ grouped into 5 types
 How to send Status Code ??
 using Response Entity - > a class part of spring framwork used to customize the HTTP response
 
+Project Lombok:
+
+it aims to reduce boilercode like getters setters contructors etc like records, during compilation it creates all the code
