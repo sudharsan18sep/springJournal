@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+//user can see the journal entries of the user
 @Document(collection = "users")
 @Data
 public class User {
