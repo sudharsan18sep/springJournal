@@ -14,6 +14,8 @@ import java.util.Date;
 //@document tells or maps it to the DB
 @Getter
 @Setter
+
+//use NOArgsConstructor during deserialization(json to POJO object)
 public class JournalEntry {
     @Id
     private ObjectId id;

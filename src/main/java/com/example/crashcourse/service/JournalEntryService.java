@@ -1,6 +1,7 @@
 package com.example.crashcourse.service;
 
 import com.example.crashcourse.entity.JournalEntry;
+import com.example.crashcourse.entity.User;
 import com.example.crashcourse.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,15 @@ public class JournalEntryService {
     @Autowired
     private JournalEntryRepository journalEntryRepository;
 
-    public void saveEntry(JournalEntry journalEntry){
-        journalEntryRepository.save(journalEntry);
+    @Autowired
+    private UserService userService;
+
+    public void saveEntry(JournalEntry journalEntry, String username){
+        User user = userService.findByUsername(username);
+
+        JournalEntry journalEntryRef = journalEntryRepository.save(journalEntry);
+        user.getJournalEntries().add(journalEntryRef);
+        userService.saveUser(user);
     }
 
     public List<JournalEntry> getAllEntry(){

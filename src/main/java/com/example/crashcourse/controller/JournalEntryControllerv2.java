@@ -2,7 +2,9 @@ package com.example.crashcourse.controller;
 
 
 import com.example.crashcourse.entity.JournalEntry;
+import com.example.crashcourse.entity.User;
 import com.example.crashcourse.service.JournalEntryService;
+import com.example.crashcourse.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +20,19 @@ import java.util.*;
 //applies reuqest mapping on the whole class
 public class JournalEntryControllerv2 {
 
-    private Map<Long, JournalEntry> journalEntries = new HashMap<>();
+    //private Map<Long, JournalEntry> journalEntries = new HashMap<>();
 
     @Autowired
     private JournalEntryService journalEntryService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll() {
-        List<JournalEntry> all= journalEntryService.getAllEntry();
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("{username}")
+    public ResponseEntity<?> getAllJournalEntriesOfUser(@PathVariable String username) {
+
+        User user = userService.findByUsername(username);
+        List<JournalEntry> all= user.getJournalEntries();
         if(all !=null && !all.isEmpty()){
             return  new ResponseEntity<>(all, HttpStatus.OK);
         }
@@ -34,13 +41,14 @@ public class JournalEntryControllerv2 {
 
     }
 
-    @PostMapping
+    @PostMapping("{userName}")
     //@requestbody - hey spring get the data from request and convert it into java object
-    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry, @PathVariable String username) {
 
         try {
+
             myEntry.setDate(LocalDateTime.now());
-            journalEntryService.saveEntry(myEntry);
+            journalEntryService.saveEntry(myEntry, username);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         }
         catch (Exception e){
@@ -76,7 +84,7 @@ public class JournalEntryControllerv2 {
         {
             oldEntry.setTitle((newEntry.getTitle()!=null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : oldEntry.getTitle()));
             oldEntry.setContent((newEntry.getContent()!=null && !newEntry.getContent().equals(""))? newEntry.getContent() : oldEntry.getContent());
-            journalEntryService.saveEntry(oldEntry);
+            journalEntryService.saveEntry(oldEntry, "veto");
             return new ResponseEntity<>(oldEntry, HttpStatus.OK);
         }
        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
