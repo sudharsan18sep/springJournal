@@ -41,7 +41,7 @@ public class JournalEntryControllerv2 {
 
     }
 
-    @PostMapping("{userName}")
+    @PostMapping("{username}")
     //@requestbody - hey spring get the data from request and convert it into java object
     public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry, @PathVariable String username) {
 
@@ -70,21 +70,21 @@ public class JournalEntryControllerv2 {
 
     }
     //? -> wildcard pattern in future we can return any class object
-    @DeleteMapping("id/{id}")
-    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
-        journalEntries.remove(id);
+    @DeleteMapping("id/{username}/{myId}")
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId myId, @PathVariable String username) {
+        journalEntryService.deleteById(myId, username);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("id/{id}")
-    public ResponseEntity<JournalEntry> updateJournalById(@PathVariable ObjectId Id, @RequestBody JournalEntry newEntry) {
+    @PutMapping("id/{username}/{myId}")
+    public ResponseEntity<JournalEntry> updateJournalById(@PathVariable ObjectId Id, @PathVariable String username, @RequestBody JournalEntry newEntry) {
 
         JournalEntry oldEntry = journalEntryService.getJournalbyId(Id).orElse(null);
         if(oldEntry != null)
         {
             oldEntry.setTitle((newEntry.getTitle()!=null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : oldEntry.getTitle()));
             oldEntry.setContent((newEntry.getContent()!=null && !newEntry.getContent().equals(""))? newEntry.getContent() : oldEntry.getContent());
-            journalEntryService.saveEntry(oldEntry, "veto");
+            journalEntryService.saveEntry(oldEntry);
             return new ResponseEntity<>(oldEntry, HttpStatus.OK);
         }
        return new ResponseEntity<>(HttpStatus.NOT_FOUND);

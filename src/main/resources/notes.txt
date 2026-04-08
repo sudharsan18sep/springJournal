@@ -29,3 +29,6 @@ using Response Entity - > a class part of spring framwork used to customize the 
 Project Lombok:
 
 it aims to reduce boilercode like getters setters contructors etc like records, during compilation it creates all the code
+
+//to connect in mongosh
+mongodb://localhost/27017

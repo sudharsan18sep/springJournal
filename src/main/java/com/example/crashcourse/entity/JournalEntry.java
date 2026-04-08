@@ -1,6 +1,7 @@
 package com.example.crashcourse.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,7 @@ import java.util.Date;
 //@document tells or maps it to the DB
 @Getter
 @Setter
+@NoArgsConstructor
 
 //use NOArgsConstructor during deserialization(json to POJO object)
 public class JournalEntry {
