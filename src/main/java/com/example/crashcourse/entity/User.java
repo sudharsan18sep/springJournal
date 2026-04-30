@@ -24,6 +24,7 @@ public class User {
     @NonNull //cannot be null part of lambok during setter call null point is checked
     private String username;
     @NonNull
+    //use @NotNull  // Jakarta Validation works better
     private String password;
 
     //to link journalentry and users collection linking use DBRef

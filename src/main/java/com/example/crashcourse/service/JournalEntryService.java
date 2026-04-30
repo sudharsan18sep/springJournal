@@ -6,6 +6,7 @@ import com.example.crashcourse.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +23,21 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
+    @Transactional
+    //we achieve atomicity and also isolation too
     public void saveEntry(JournalEntry journalEntry, String username){
-        User user = userService.findByUsername(username);
+        try {
+            User user = userService.findByUsername(username);
 
-        JournalEntry journalEntryRef = journalEntryRepository.save(journalEntry);
-        user.getJournalEntries().add(journalEntryRef);
-        userService.saveUser(user);
+            JournalEntry journalEntryRef = journalEntryRepository.save(journalEntry);
+            user.getJournalEntries().add(journalEntryRef);
+            userService.saveUser(user);
+
+        }catch (Exception e)
+        {
+            System.out.println(e);
+        }
+
     }
 
     public void saveEntry(JournalEntry journalEntry){

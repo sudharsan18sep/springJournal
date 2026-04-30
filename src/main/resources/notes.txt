@@ -36,3 +36,4 @@ mongodb://localhost/27017
 @Transactional -> make sure the medthod is a single unit will if any one fails rolls back the previus changes
 
 platformTransactionManager -> takes care commit and roolback interface
+MongoTransactionManager -> class that implements the platformTransacrionmanager interface
