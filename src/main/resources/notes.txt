@@ -37,3 +37,17 @@ mongodb://localhost/27017
 
 platformTransactionManager -> takes care commit and roolback interface
 MongoTransactionManager -> class that implements the platformTransacrionmanager interface
+
+Spring security : security framework handles authorization and autherntication
+Authorizatoin: the process of granting or denying access to specific resources
+or actions based on user roles and permission
+authentication :the process of verifying users identity
+
+Basic encoded string is Username:password in base64
+the client sends an authorization header (Basic encoded string) the server decodes and verifies them
+
+by default all endpoints are secured and spring security will generate a default user witha random passowrd and it is printed on the console
+logs in the startup
+
+
+
